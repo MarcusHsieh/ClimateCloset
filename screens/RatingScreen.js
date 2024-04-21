@@ -1,70 +1,69 @@
-// from unratedOutfitsScreen.jsx
-
 import React, { useState, useEffect } from 'react';
 import { View, Text, TextInput, Button, StyleSheet } from 'react-native';
 import { CheckBox } from 'react-native-elements';
 import { Rating } from 'react-native-ratings';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 
 function RatingScreen({ route, navigation, updateOutfits, outfits }) {
-  const { outfitId } = route.params; // Passed from UnratedOutfitsScreen or wherever you navigate from
-  
-  // Find the outfit to be rated
-  const outfitToRate = outfits.find(outfit => outfit.id === outfitId);
+  const { outfit } = route.params; // Passed from UnratedOutfitsScreen or wherever you navigate from
 
-  const [colorScheme, setColorScheme] = useState(outfitToRate?.colorScheme || '');
-  const [temperature, setTemperature] = useState(outfitToRate?.temperature || { hot: false, cold: false, good: false });
-  const [rating, setRating] = useState(outfitToRate?.rating || 0);
-
-  const handleRating = (rating) => {
-    setRating(rating);
-  };
-
-  const handleTemperature = (type) => {
-    setTemperature({ hot: false, cold: false, good: false, [type]: true });
-  };
+  const [colorScheme, setColorScheme] = useState(outfit?.colorScheme || '');
+  const [lowTemp, setLowTemp] = useState(outfit?.lowTemp || '');
+  const [highTemp, setHighTemp] = useState(outfit?.highTemp || '');
+  const [rating, setRating] = useState(outfit?.rating || 0);
 
   const handleSubmit = () => {
-    if (!colorScheme || !(temperature.hot || temperature.cold || temperature.good) || rating === 0) {
+    if (!colorScheme || !lowTemp || !highTemp || rating === 0) {
       alert('Please fill out all fields');
       return;
     }
 
-    // Update the outfit with the new data
     const updatedOutfit = {
-      ...outfitToRate,
+      ...outfit,
       colorScheme,
-      temperature,
+      lowTemp,
+      highTemp,
       rating,
     };
 
-    // Update the outfits state
-    const newOutfits = outfits.map(outfit => outfit.id === outfitId ? updatedOutfit : outfit);
+    const updatedOutfits = outfits.map((o) => (o.id === outfit.id ? updatedOutfit : o));
 
-    // Persist the updated outfits in AsyncStorage
-    updateOutfits(newOutfits);
-
-    // Navigate back or to a different screen
+    updateOutfits(updatedOutfits);
     navigation.goBack();
   };
 
   return (
     <View style={styles.container}>
       <Text style={styles.header}>Rate Your Outfit</Text>
+
       <TextInput
         style={styles.input}
-        placeholder="How was the color scheme?"
+        placeholder="Personal Thoughts"
         value={colorScheme}
         onChangeText={setColorScheme}
       />
-      <CheckBox title="Hot" checked={temperature.hot} onPress={() => handleTemperature('hot')} />
-      <CheckBox title="Cold" checked={temperature.cold} onPress={() => handleTemperature('cold')} />
-      <CheckBox title="Good" checked={temperature.good} onPress={() => handleTemperature('good')} />
+
+      <TextInput
+        style={styles.input}
+        placeholder="Low Temperature (°F)"
+        keyboardType="numeric"
+        value={lowTemp}
+        onChangeText={setLowTemp}
+      />
+
+      <TextInput
+        style={styles.input}
+        placeholder="High Temperature (°F)"
+        keyboardType="numeric"
+        value={highTemp}
+        onChangeText={setHighTemp}
+      />
+
       <Rating
         showRating
-        onFinishRating={handleRating}
-        style={{ paddingVertical: 10 }}
+        onFinishRating={setRating}
+        style={styles.rating}
       />
+
       <Button title="Submit" onPress={handleSubmit} />
     </View>
   );
@@ -77,19 +76,21 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     backgroundColor: 'white',
   },
-  input: {
-    height: 40,
-    borderColor: 'gray',
-    borderWidth: 1,
-    marginTop: 20,
-    marginBottom: 20,
-    paddingLeft: 10,
-    paddingRight: 10,
-  },
   header: {
     fontSize: 24,
     fontWeight: 'bold',
     marginBottom: 20,
+  },
+  input: {
+    height: 45, 
+    borderColor: 'gray',
+    borderWidth: 1,
+    width: '80%', 
+    paddingHorizontal: 10,
+    marginVertical: 10, 
+  },
+  rating: {
+    paddingVertical: 10,
   },
 });
 

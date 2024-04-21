@@ -1,7 +1,15 @@
 import React from 'react';
-import { View, Text, FlatList, Image, StyleSheet } from 'react-native';
+import { View, Text, FlatList, TouchableOpacity, Image, StyleSheet } from 'react-native';
 
-function ClosetScreen({ outfits }) {
+function ClosetScreen({ navigation, outfits }) {
+  if (!outfits || outfits.length === 0) {
+    return (
+      <View style={styles.emptyContainer}>
+        <Text>No outfits found in your closet.</Text>
+      </View>
+    );
+  }
+
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Your Closet</Text>
@@ -9,10 +17,20 @@ function ClosetScreen({ outfits }) {
         data={outfits}
         keyExtractor={(item) => item.id.toString()}
         renderItem={({ item }) => (
-          <View style={styles.item}>
+          <TouchableOpacity
+            style={styles.item}
+            onPress={() => navigation.navigate('ShowRatingScreen', { outfit: item })}
+          >
             <Image source={{ uri: item.image }} style={styles.outfitImage} />
-            <Text>{item.name}</Text>
-          </View>
+            <View style={styles.textContainer}>
+              <Text style={styles.outfitName} numberOfLines={1}>
+                {item.name}
+              </Text>
+              <Text style={styles.ratingText}>
+                {item.rating ? `Rating: ${item.rating}/5` : 'Not Rated'}
+              </Text>
+            </View>
+          </TouchableOpacity>
         )}
       />
     </View>
@@ -22,14 +40,14 @@ function ClosetScreen({ outfits }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
     backgroundColor: 'white',
+    padding: 20,
   },
   title: {
     fontSize: 24,
     color: 'blue',
-    margin: 20,
+    textAlign: 'center',
+    marginBottom: 20,
   },
   item: {
     flexDirection: 'row',
@@ -37,9 +55,27 @@ const styles = StyleSheet.create({
     padding: 10,
   },
   outfitImage: {
-    width: 50,
-    height: 50,
+    width: 100,
+    height: 100,
     marginRight: 20,
+  },
+  textContainer: {
+    flex: 1, // Take remaining space
+  },
+  outfitName: {
+    fontSize: 18,
+    flexShrink: 1, // Allow text to wrap
+    paddingRight: 10,
+  },
+  ratingText: {
+    color: 'gray',
+    fontSize: 14,
+    paddingLeft: 10,
+  },
+  emptyContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 });
 

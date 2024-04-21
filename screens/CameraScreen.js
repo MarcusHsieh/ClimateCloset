@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import {
   View,
   Button,
@@ -6,14 +6,12 @@ import {
   TextInput,
   Image,
   Alert,
-  Text,
 } from 'react-native';
 import { launchImageLibrary } from 'react-native-image-picker';
 
 function CameraScreen({ navigation, addOutfit }) {
   const [photoUri, setPhotoUri] = useState('');
   const [outfitName, setOutfitName] = useState('');
-  const [tempRange, setTempRange] = useState('');
 
   const openPhotoLibrary = () => {
     launchImageLibrary({}, (response) => {
@@ -31,8 +29,8 @@ function CameraScreen({ navigation, addOutfit }) {
   };
 
   const submitOutfit = () => {
-    if (!outfitName || !tempRange) {
-      Alert.alert("Please enter an outfit name and today's weather range.");
+    if (!outfitName) {
+      Alert.alert("Please enter an outfit name.");
       return;
     }
 
@@ -44,7 +42,6 @@ function CameraScreen({ navigation, addOutfit }) {
     const newOutfit = {
       id: Date.now(),
       name: outfitName,
-      tempRange,
       image: photoUri,
     };
 
@@ -52,7 +49,6 @@ function CameraScreen({ navigation, addOutfit }) {
 
     // Clear the form and navigate back
     setOutfitName('');
-    setTempRange('');
     setPhotoUri('');
 
     navigation.navigate('Home');
@@ -69,12 +65,6 @@ function CameraScreen({ navigation, addOutfit }) {
               placeholder="Outfit Name"
               value={outfitName}
               onChangeText={setOutfitName}
-            />
-            <TextInput
-              style={styles.input}
-              placeholder="Today's Weather Range"
-              value={tempRange}
-              onChangeText={setTempRange}
             />
             <Button title="Submit" onPress={submitOutfit} />
           </View>
@@ -103,11 +93,12 @@ const styles = StyleSheet.create({
     padding: 10,
   },
   input: {
-    height: 40,
+    height: 45, 
     borderColor: 'gray',
     borderWidth: 1,
-    marginBottom: 10,
-    paddingLeft: 10,
+    width: '80%', 
+    paddingHorizontal: 10,
+    marginVertical: 10, 
   },
   captureButtonContainer: {
     flex: 1,

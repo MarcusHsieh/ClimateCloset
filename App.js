@@ -1,25 +1,23 @@
-import { StatusBar } from 'expo-status-bar';
 import React, { useState, useEffect } from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-// import { AsyncStorage } from 'react-native';
 
-
-// Import your screens
+// Importing screens
 import HomeScreen from './screens/HomeScreen';
 import CameraScreen from './screens/CameraScreen';
 import UnratedOutfitsScreen from './screens/UnratedOutfitsScreen';
 import ClosetScreen from './screens/MyClosetScreen';
 import FilteredOutfitsScreen from './screens/FilteredOutfitsScreen';
-import RatingScreen from './screens/RatingScreen'; // Assuming RatingScreen exists
+import RatingScreen from './screens/RatingScreen';
+import ShowRatingScreen from './screens/ShowRatingScreen';
 
 const Stack = createStackNavigator();
 
 function App() {
   const [outfits, setOutfits] = useState([]);
 
-  // Load outfits from AsyncStorage when the app starts
+  // Load outfits from AsyncStorage
   useEffect(() => {
     const loadOutfits = async () => {
       try {
@@ -28,35 +26,28 @@ function App() {
           setOutfits(JSON.parse(storedOutfits));
         }
       } catch (error) {
-        console.error("Error loading outfits from AsyncStorage:", error);
+        console.error('Error loading outfits from AsyncStorage:', error);
       }
     };
-  
+
     loadOutfits();
   }, []);
-  
 
-  // Save the updated outfits to AsyncStorage whenever it changes
+  // Update outfits in both state and AsyncStorage
   const updateOutfits = async (newOutfits) => {
     try {
       setOutfits(newOutfits);
       await AsyncStorage.setItem('outfits', JSON.stringify(newOutfits));
     } catch (error) {
-      console.error("Error saving outfits to AsyncStorage:", error);
+      console.error('Error saving outfits to AsyncStorage:', error);
     }
   };
 
   return (
     <NavigationContainer>
       <Stack.Navigator initialRouteName="Home">
-        <Stack.Screen
-          name="Home"
-          component={HomeScreen}
-        />
-        <Stack.Screen
-          name="Camera"
-          options={{ title: "Take Picture" }}
-        >
+        <Stack.Screen name="Home" component={HomeScreen} />
+        <Stack.Screen name="Camera" options={{ title: 'Take Picture' }}>
           {(props) => (
             <CameraScreen
               {...props}
@@ -65,14 +56,25 @@ function App() {
           )}
         </Stack.Screen>
         <Stack.Screen name="UnratedOutfits">
-          {(props) => <UnratedOutfitsScreen {...props} outfits={outfits} />}
+          {(props) => (
+            <UnratedOutfitsScreen
+              {...props}
+              outfits={outfits}
+              navigation={props.navigation}
+            />
+          )}
         </Stack.Screen>
-        <Stack.Screen name="Closet" component={ClosetScreen} />
+        <Stack.Screen name="Closet">
+          {(props) => (
+            <ClosetScreen
+              {...props}
+              outfits={outfits}
+              navigation={props.navigation}
+            />
+          )}
+        </Stack.Screen>
         <Stack.Screen name="FilteredOutfits" component={FilteredOutfitsScreen} />
-        <Stack.Screen
-          name="RatingScreen"
-          options={{ title: "Rate Outfit" }}
-        >
+        <Stack.Screen name="RatingScreen" options={{ title: 'Rate Outfit' }}>
           {(props) => (
             <RatingScreen
               {...props}
@@ -81,8 +83,16 @@ function App() {
             />
           )}
         </Stack.Screen>
+        <Stack.Screen name="ShowRatingScreen" options={{ title: 'Show Outfit Rating' }}>
+          {(props) => (
+            <ShowRatingScreen
+              {...props}
+              outfits={outfits}
+              updateOutfits={updateOutfits}
+            />
+          )}
+        </Stack.Screen>
       </Stack.Navigator>
-      <StatusBar style="auto" />
     </NavigationContainer>
   );
 }
