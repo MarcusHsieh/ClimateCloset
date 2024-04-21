@@ -7,64 +7,37 @@ import {
   Image,
   Alert,
   Text,
-  Platform,
 } from 'react-native';
-import { Camera } from 'react-native-vision-camera';
-
-async function requestCameraPermission() {
-  
-  const result = await request(PERMISSIONS.IOS.CAMERA);
-  return result === RESULTS.GRANTED;
-
-}
+import { launchImageLibrary } from 'react-native-image-picker';
 
 function CameraScreen({ navigation, addOutfit }) {
-  const [cameraPermission, setCameraPermission] = useState(false);
   const [photoUri, setPhotoUri] = useState('');
   const [outfitName, setOutfitName] = useState('');
   const [tempRange, setTempRange] = useState('');
 
-  useEffect(() => {
-    (async () => {
-      const hasPermission = await requestCameraPermission();
-      setCameraPermission(hasPermission);
-    })();
-  }, []);
+  const openPhotoLibrary = () => {
+    launchImageLibrary({}, (response) => {
+      if (response.errorCode) {
+        Alert.alert('Error', `An error occurred: ${response.errorMessage}`);
+        return;
+      }
 
-  const openNativeCamera = async () => {
-    if (!cameraPermission) {
-      Alert.alert('Camera permission required', 'Please allow camera access to use this feature.');
-      return;
-    }
-
-    let result = await ImagePicker.launchCameraAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.Images,
-      allowsEditing: true,
-      quality: 1,
+      if (response.didCancel) {
+        console.log('User cancelled image selection');
+      } else if (response.assets && response.assets.length > 0) {
+        setPhotoUri(response.assets[0].uri);
+      }
     });
-
-    if (!result.cancelled) {
-      setPhotoUri(result.uri);
-    }
-  };
-
-  const takePicture = async (camera) => {
-    if (!cameraPermission) {
-      Alert.alert('Camera permission is required to use this feature.');
-      return;
-    }
-
-    try {
-      const photo = await camera.takePhoto({ quality: 0.5, enableAutoStabilization: true });
-      setPhotoUri(photo.uri);
-    } catch (error) {
-      console.error('Error taking picture:', error);
-    }
   };
 
   const submitOutfit = () => {
     if (!outfitName || !tempRange) {
       Alert.alert("Please enter an outfit name and today's weather range.");
+      return;
+    }
+
+    if (!photoUri) {
+      Alert.alert("Please select a photo before submitting.");
       return;
     }
 
@@ -84,14 +57,6 @@ function CameraScreen({ navigation, addOutfit }) {
 
     navigation.navigate('Home');
   };
-
-  if (!cameraPermission) {
-    return (
-      <View style={styles.permissionWarning}>
-        <Text>Camera permission is required to use this feature.</Text>
-      </View>
-    );
-  }
 
   return (
     <View style={{ flex: 1 }}>
@@ -115,25 +80,13 @@ function CameraScreen({ navigation, addOutfit }) {
           </View>
         </View>
       ) : (
-        <Camera
-          style={{ flex: 1 }}
-          ref={(ref) => {
-            this.camera = ref;
-          }}
-          captureAudio={false}
-        >
-          <View style={styles.captureButtonContainer}>
-            <Button 
-              title="Take Picture" 
-              onPress={() => takePicture(this.camera)} 
-            />
-          </View>
-        </Camera>
+        <View style={styles.captureButtonContainer}>
+          <Button title="Choose from Library" onPress={openPhotoLibrary} />
+        </View>
       )}
     </View>
   );
 }
-
 
 const styles = StyleSheet.create({
   previewContainer: {
@@ -160,12 +113,6 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
-  },
-  permissionWarning: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-    padding: 20,
   },
 });
 
