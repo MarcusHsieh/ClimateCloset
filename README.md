@@ -1,5 +1,7 @@
 # ClimateCloset
 
+Finish time -> 9:23am
+
 ## Quick summary
 
 This app better equips users with the knowledge for what to wear given the weather, decreasing concern and overthinking, better health and happiness.
