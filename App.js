@@ -64,7 +64,9 @@ function App() {
             />
           )}
         </Stack.Screen>
-        <Stack.Screen name="UnratedOutfits" component={UnratedOutfitsScreen} />
+        <Stack.Screen name="UnratedOutfits">
+          {(props) => <UnratedOutfitsScreen {...props} outfits={outfits} />}
+        </Stack.Screen>
         <Stack.Screen name="Closet" component={ClosetScreen} />
         <Stack.Screen name="FilteredOutfits" component={FilteredOutfitsScreen} />
         <Stack.Screen

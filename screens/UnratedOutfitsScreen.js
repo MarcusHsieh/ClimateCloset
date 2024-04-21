@@ -1,6 +1,5 @@
 // from "Rate Your Outfits"
 // navigate to rating screen when outfit is clicked
-
 import React from 'react';
 import {
   View,
@@ -12,6 +11,18 @@ import {
 } from 'react-native';
 
 function UnratedOutfitsScreen({ navigation, outfits }) {
+
+  console.log("Outfits passed to UnratedOutfitsScreen:", outfits);
+  // Check if outfits is undefined or not an array
+  if (!Array.isArray(outfits)) {
+    return (
+      <View style={styles.errorContainer}>
+        <Text style={styles.errorText}>Error: Outfits data is not available.</Text>
+      </View>
+    );
+  }
+
+  // Filter to get unrated outfits
   const unratedOutfits = outfits.filter((outfit) => !outfit.rated);
 
   return (
@@ -62,6 +73,15 @@ const styles = StyleSheet.create({
     width: 50,
     height: 50,
     marginRight: 20,
+  },
+  errorContainer: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  errorText: {
+    color: 'red',
+    fontSize: 18,
   },
 });
 
