@@ -1,5 +1,3 @@
-// from "Rate Your Outfits"
-// navigate to rating screen when outfit is clicked
 import React from 'react';
 import {
   View,
@@ -11,9 +9,7 @@ import {
 } from 'react-native';
 
 function UnratedOutfitsScreen({ navigation, outfits }) {
-
-  console.log("Outfits passed to UnratedOutfitsScreen:", outfits);
-  // Check if outfits is undefined or not an array
+  // Check if outfits data is valid and it's an array
   if (!Array.isArray(outfits)) {
     return (
       <View style={styles.errorContainer}>
@@ -22,12 +18,12 @@ function UnratedOutfitsScreen({ navigation, outfits }) {
     );
   }
 
-  // Filter to get unrated outfits
+  // Filter to get only unrated outfits (where rated is undefined or false)
   const unratedOutfits = outfits.filter((outfit) => !outfit.rated);
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Unrated Outfits</Text>
+      <Text style={styles.title}>Rate Your Outfits</Text>
       {unratedOutfits.length === 0 ? (
         <Text>No outfits to rate</Text>
       ) : (
@@ -70,8 +66,8 @@ const styles = StyleSheet.create({
     padding: 10,
   },
   outfitImage: {
-    width: 50,
-    height: 50,
+    width: 100,
+    height: 100,
     marginRight: 20,
   },
   errorContainer: {

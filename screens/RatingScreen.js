@@ -1,10 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, TextInput, Button, StyleSheet } from 'react-native';
-import { CheckBox } from 'react-native-elements';
+import { View, Text, TextInput, Button, StyleSheet, Alert } from 'react-native';
 import { Rating } from 'react-native-ratings';
 
 function RatingScreen({ route, navigation, updateOutfits, outfits }) {
-  const { outfit } = route.params; // Passed from UnratedOutfitsScreen or wherever you navigate from
+  const { outfit } = route.params;
 
   const [colorScheme, setColorScheme] = useState(outfit?.colorScheme || '');
   const [lowTemp, setLowTemp] = useState(outfit?.lowTemp || '');
@@ -12,8 +11,9 @@ function RatingScreen({ route, navigation, updateOutfits, outfits }) {
   const [rating, setRating] = useState(outfit?.rating || 0);
 
   const handleSubmit = () => {
+    // Validate input fields
     if (!colorScheme || !lowTemp || !highTemp || rating === 0) {
-      alert('Please fill out all fields');
+      Alert.alert('Incomplete Information', 'Please fill out all fields and provide a rating.');
       return;
     }
 
@@ -23,12 +23,15 @@ function RatingScreen({ route, navigation, updateOutfits, outfits }) {
       lowTemp,
       highTemp,
       rating,
+      rated: true, // Ensure the outfit is marked as rated
     };
 
-    const updatedOutfits = outfits.map((o) => (o.id === outfit.id ? updatedOutfit : o));
+    const updatedOutfits = outfits.map((o) =>
+      o.id === outfit.id ? updatedOutfit : o
+    );
 
-    updateOutfits(updatedOutfits);
-    navigation.goBack();
+    updateOutfits(updatedOutfits); // Update the state and potentially persist
+    navigation.goBack(); // Go back to the previous screen
   };
 
   return (
@@ -37,7 +40,7 @@ function RatingScreen({ route, navigation, updateOutfits, outfits }) {
 
       <TextInput
         style={styles.input}
-        placeholder="Personal Thoughts"
+        placeholder="Describe the color scheme"
         value={colorScheme}
         onChangeText={setColorScheme}
       />
@@ -47,7 +50,7 @@ function RatingScreen({ route, navigation, updateOutfits, outfits }) {
         placeholder="Low Temperature (°F)"
         keyboardType="numeric"
         value={lowTemp}
-        onChangeText={setLowTemp}
+        onChangeText={(text) => setLowTemp(parseFloat(text))}
       />
 
       <TextInput
@@ -55,13 +58,15 @@ function RatingScreen({ route, navigation, updateOutfits, outfits }) {
         placeholder="High Temperature (°F)"
         keyboardType="numeric"
         value={highTemp}
-        onChangeText={setHighTemp}
+        onChangeText={(text) => setHighTemp(parseFloat(text))}
       />
 
+      <Text>Rate this Outfit:</Text>
       <Rating
         showRating
         onFinishRating={setRating}
         style={styles.rating}
+        defaultRating={rating}
       />
 
       <Button title="Submit" onPress={handleSubmit} />
@@ -82,12 +87,12 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   input: {
-    height: 45, 
+    height: 45,
     borderColor: 'gray',
     borderWidth: 1,
-    width: '80%', 
+    width: '80%',
     paddingHorizontal: 10,
-    marginVertical: 10, 
+    marginVertical: 10,
   },
   rating: {
     paddingVertical: 10,

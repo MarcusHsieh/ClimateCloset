@@ -46,7 +46,15 @@ function App() {
   return (
     <NavigationContainer>
       <Stack.Navigator initialRouteName="Home">
-        <Stack.Screen name="Home" component={HomeScreen} />
+        <Stack.Screen name="Home">
+          {(props) => (
+            <HomeScreen
+              {...props}
+              outfits={outfits}
+              setOutfits={updateOutfits}
+            />
+          )}
+        </Stack.Screen>
         <Stack.Screen name="Camera" options={{ title: 'Take Picture' }}>
           {(props) => (
             <CameraScreen
@@ -73,7 +81,17 @@ function App() {
             />
           )}
         </Stack.Screen>
-        <Stack.Screen name="FilteredOutfits" component={FilteredOutfitsScreen} />
+        <Stack.Screen
+          name="FilteredOutfits"
+          options={{ title: 'Filtered Outfits' }}
+        >
+          {(props) => (
+            <FilteredOutfitsScreen
+              {...props}
+              outfits={outfits}
+            />
+          )}
+        </Stack.Screen>
         <Stack.Screen name="RatingScreen" options={{ title: 'Rate Outfit' }}>
           {(props) => (
             <RatingScreen

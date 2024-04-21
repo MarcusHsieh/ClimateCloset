@@ -1,26 +1,51 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, Button, FlatList, Image, TouchableOpacity, StyleSheet } from 'react-native';
+import { View, Text, TextInput, Button, TouchableOpacity, StyleSheet } from 'react-native';
 
-function HomeScreen({ navigation, outfits, setOutfits }) {
-  const [tempRange, setTempRange] = useState('');
+function HomeScreen({ navigation, outfits }) {
+  const [lowTemp, setLowTemp] = useState('');
+  const [highTemp, setHighTemp] = useState('');
 
   const handleTempSubmit = () => {
-    // Filter outfits based on tempRange and navigate to FilteredOutfitsScreen
-    const filteredOutfits = outfits.filter(outfit => outfit.tempRange === tempRange);
-    navigation.navigate('FilteredOutfits', { outfits: filteredOutfits });
+    const low = parseFloat(lowTemp);
+    const high = parseFloat(highTemp);
+
+    if (isNaN(low) || isNaN(high)) {
+      alert('Please enter valid numbers for temperature.');
+      return;
+    }
+
+    navigation.navigate('FilteredOutfits', { lowTemp: low, highTemp: high, outfits });
   };
 
   return (
     <View style={styles.container}>
       <Text style={styles.title}>ClimateCloset</Text>
+      <Text style={styles.subheading}>
+        an app designed to journal your outfits based on the weather
+      </Text>
+
       <Text style={styles.greeting}>Hello! Let's figure out what to wear today...</Text>
-      <TextInput
-        style={styles.input}
-        placeholder="Enter today's low and high temperature range"
-        value={tempRange}
-        onChangeText={setTempRange}
-      />
+
+      <View style={styles.tempInputContainer}>
+        <TextInput
+          style={styles.tempInput}
+          placeholder="Low (°F)"
+          value={lowTemp}
+          onChangeText={setLowTemp}
+          keyboardType="numeric"
+        />
+        <Text style={styles.dash}>-</Text>
+        <TextInput
+          style={styles.tempInput}
+          placeholder="High (°F)"
+          value={highTemp}
+          onChangeText={setHighTemp}
+          keyboardType="numeric"
+        />
+      </View>
+
       <Button title="Submit" onPress={handleTempSubmit} />
+
       <View style={styles.menu}>
         <TouchableOpacity
           style={styles.menuButton}
@@ -53,21 +78,40 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
   },
   title: {
-    fontSize: 24,
+    marginTop: 0,
+    fontSize: 40,
     color: 'blue',
+    fontWeight: 'bold',
+  },
+  subheading: {
+    fontSize: 16,
+    color: 'gray',
+    marginVertical: 10, // Adjust margin as needed
+    textAlign: 'center',
+    width: 200,
   },
   greeting: {
+    marginTop: 60,
     fontSize: 18,
     color: 'gray',
   },
-  input: {
-    height: 40,
-    borderColor: 'gray',
-    borderWidth: 1,
+  tempInputContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
     marginTop: 20,
     marginBottom: 20,
-    paddingLeft: 10,
-    paddingRight: 10,
+    width: 200,
+  },
+  tempInput: {
+    height: 50,
+    borderColor: 'gray',
+    borderWidth: 1,
+    paddingHorizontal: 10,
+    flex: 1,
+  },
+  dash: {
+    fontSize: 20,
+    paddingHorizontal: 10,
   },
   menu: {
     marginTop: 30,
@@ -80,7 +124,6 @@ const styles = StyleSheet.create({
     marginVertical: 10,
     borderRadius: 10,
     alignItems: 'center',
-    justifyContent: 'center',
   },
   menuButtonText: {
     fontSize: 16,
@@ -88,9 +131,4 @@ const styles = StyleSheet.create({
   },
 });
 
-
 export default HomeScreen;
-
-// In this component, I’ve used the useState hook to manage the state of the temperature range input. When the user types in the input, the setTempRange function is called to update the tempRange state.
-// The filteredOutfits constant holds the outfits that match the input temperature range. This is done by filtering the outfits prop based on the tempRange state.
-// The FlatList component is used to display the filtered outfits. Each outfit is displayed as an image and a name in a row. The keyExtractor prop is used to specify a unique key for each item in the list.

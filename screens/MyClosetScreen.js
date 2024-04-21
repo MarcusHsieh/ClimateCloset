@@ -55,15 +55,15 @@ const styles = StyleSheet.create({
     padding: 10,
   },
   outfitImage: {
-    width: 100,
-    height: 100,
+    width: 120,
+    height: 120,
     marginRight: 20,
   },
   textContainer: {
     flex: 1, // Take remaining space
   },
   outfitName: {
-    fontSize: 18,
+    fontSize: 25,
     flexShrink: 1, // Allow text to wrap
     paddingRight: 10,
   },
