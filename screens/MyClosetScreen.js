@@ -60,11 +60,11 @@ const styles = StyleSheet.create({
     marginRight: 20,
   },
   textContainer: {
-    flex: 1, // Take remaining space
+    flex: 1, 
   },
   outfitName: {
     fontSize: 25,
-    flexShrink: 1, // Allow text to wrap
+    flexShrink: 1,
     paddingRight: 10,
   },
   ratingText: {

@@ -3,7 +3,7 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-// Importing screens
+// import screens
 import HomeScreen from './screens/HomeScreen';
 import CameraScreen from './screens/CameraScreen';
 import UnratedOutfitsScreen from './screens/UnratedOutfitsScreen';
@@ -17,7 +17,7 @@ const Stack = createStackNavigator();
 function App() {
   const [outfits, setOutfits] = useState([]);
 
-  // Load outfits from AsyncStorage
+  // load outfits from AsyncStorage
   useEffect(() => {
     const loadOutfits = async () => {
       try {
@@ -33,7 +33,7 @@ function App() {
     loadOutfits();
   }, []);
 
-  // Update outfits in both state and AsyncStorage
+  // update outfits in state AND AsyncStorage
   const updateOutfits = async (newOutfits) => {
     try {
       setOutfits(newOutfits);
@@ -43,6 +43,7 @@ function App() {
     }
   };
 
+  // navigation and param/arg place
   return (
     <NavigationContainer>
       <Stack.Navigator initialRouteName="Home">

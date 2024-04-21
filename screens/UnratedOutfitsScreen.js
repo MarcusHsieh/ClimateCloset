@@ -9,7 +9,7 @@ import {
 } from 'react-native';
 
 function UnratedOutfitsScreen({ navigation, outfits }) {
-  // Check if outfits data is valid and it's an array
+  // check if outfits data is valid and is an array
   if (!Array.isArray(outfits)) {
     return (
       <View style={styles.errorContainer}>
@@ -18,7 +18,7 @@ function UnratedOutfitsScreen({ navigation, outfits }) {
     );
   }
 
-  // Filter to get only unrated outfits (where rated is undefined or false)
+  // filter to get only unrated outfits (where rated is undefined or false)
   const unratedOutfits = outfits.filter((outfit) => !outfit.rated);
 
   return (

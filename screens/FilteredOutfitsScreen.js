@@ -1,7 +1,8 @@
 import React from 'react';
 import { View, Text, FlatList, Image, StyleSheet, TouchableOpacity } from 'react-native';
 
-function FilteredOutfitsScreen({ route, navigation }) { // Added navigation
+// navigation and get temp inputs
+function FilteredOutfitsScreen({ route, navigation }) { 
   const { lowTemp, highTemp, outfits } = route.params;
 
   const filteredOutfits = outfits.filter((outfit) => {
@@ -16,9 +17,10 @@ function FilteredOutfitsScreen({ route, navigation }) { // Added navigation
         <FlatList
           data={filteredOutfits}
           renderItem={({ item }) => (
-            <TouchableOpacity // Add TouchableOpacity to handle taps
+            <TouchableOpacity 
               style={styles.outfitItem}
-              onPress={() => navigation.navigate('ShowRatingScreen', { outfit: item })} // Navigate to ShowRatingScreen with outfit details
+              // navigate to ShowRatingScreen with outfit details
+              onPress={() => navigation.navigate('ShowRatingScreen', { outfit: item })} 
             >
               <Image source={{ uri: item.image }} style={styles.outfitImage} />
               <Text style={styles.outfitName}>{item.name}</Text>
@@ -56,7 +58,7 @@ const styles = StyleSheet.create({
     marginRight: 10,
   },
   outfitName: {
-    fontSize: 18, // Increased font size for outfit name
+    fontSize: 18, 
   },
   noOutfitsText: {
     fontSize: 16,

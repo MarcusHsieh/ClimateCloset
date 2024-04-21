@@ -11,7 +11,7 @@ function RatingScreen({ route, navigation, updateOutfits, outfits }) {
   const [rating, setRating] = useState(outfit?.rating || 0);
 
   const handleSubmit = () => {
-    // Validate input fields
+    // input validation
     if (!colorScheme || !lowTemp || !highTemp || rating === 0) {
       Alert.alert('Incomplete Information', 'Please fill out all fields and provide a rating.');
       return;
@@ -30,8 +30,8 @@ function RatingScreen({ route, navigation, updateOutfits, outfits }) {
       o.id === outfit.id ? updatedOutfit : o
     );
 
-    updateOutfits(updatedOutfits); // Update the state and potentially persist
-    navigation.goBack(); // Go back to the previous screen
+    updateOutfits(updatedOutfits); // update state 
+    navigation.goBack(); // go back to the previous screen
   };
 
   return (

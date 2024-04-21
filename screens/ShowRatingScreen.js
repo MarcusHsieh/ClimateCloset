@@ -14,11 +14,11 @@ function ShowRatingScreen({ route, navigation, updateOutfits, outfits }) {
           text: 'Delete',
           style: 'destructive',
           onPress: () => {
-            // Filter out the outfit to be deleted
+            // filter outfit to be deleted
             const updatedOutfits = outfits.filter((o) => o.id !== outfit.id);
-            // Update the outfits list
+            // update the outfits list
             updateOutfits(updatedOutfits);
-            // Navigate back to the previous screen
+            // navigate back to previous screen
             navigation.goBack();
           },
         },

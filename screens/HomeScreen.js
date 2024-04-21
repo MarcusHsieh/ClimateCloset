@@ -86,7 +86,7 @@ const styles = StyleSheet.create({
   subheading: {
     fontSize: 16,
     color: 'gray',
-    marginVertical: 10, // Adjust margin as needed
+    marginVertical: 10, 
     textAlign: 'center',
     width: 200,
   },

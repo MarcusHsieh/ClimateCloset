@@ -9,6 +9,7 @@ import {
 } from 'react-native';
 import { launchImageLibrary } from 'react-native-image-picker';
 
+// image selection
 function CameraScreen({ navigation, addOutfit }) {
   const [photoUri, setPhotoUri] = useState('');
   const [outfitName, setOutfitName] = useState('');
@@ -28,6 +29,7 @@ function CameraScreen({ navigation, addOutfit }) {
     });
   };
 
+  // name outfit and submit
   const submitOutfit = () => {
     if (!outfitName) {
       Alert.alert("Please enter an outfit name.");
@@ -47,7 +49,7 @@ function CameraScreen({ navigation, addOutfit }) {
 
     addOutfit(newOutfit);
 
-    // Clear the form and navigate back
+    // clear form and navigate back
     setOutfitName('');
     setPhotoUri('');
 
