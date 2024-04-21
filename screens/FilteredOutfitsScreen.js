@@ -4,7 +4,6 @@ import { View, Text, FlatList, Image, StyleSheet } from 'react-native';
 function FilteredOutfitsScreen({ route }) {
   const { lowTemp, highTemp, outfits } = route.params;
 
-  // Calculate the filtered outfits based on the average temperature of each outfit
   const filteredOutfits = outfits.filter((outfit) => {
     const avgTemp = (outfit.lowTemp + outfit.highTemp) / 2;
     return avgTemp >= lowTemp && avgTemp <= highTemp;
@@ -19,7 +18,7 @@ function FilteredOutfitsScreen({ route }) {
           renderItem={({ item }) => (
             <View style={styles.outfitItem}>
               <Image source={{ uri: item.image }} style={styles.outfitImage} />
-              <Text>{item.name}</Text>
+              <Text style={styles.outfitName}>{item.name}</Text>
             </View>
           )}
           keyExtractor={(item) => item.id.toString()}
@@ -36,9 +35,11 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
+    backgroundColor: 'white', // Set a background color
   },
   title: {
     fontSize: 24,
+    color: 'blue',
     marginVertical: 10,
   },
   outfitItem: {
@@ -47,9 +48,13 @@ const styles = StyleSheet.create({
     marginVertical: 10,
   },
   outfitImage: {
-    width: 50,
-    height: 50,
+    width: 100,
+    height: 100,
     marginRight: 10,
+  },
+  outfitName: {
+    fontSize: 18, // Increased font size for outfit name
+
   },
   noOutfitsText: {
     fontSize: 16,

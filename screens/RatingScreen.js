@@ -23,7 +23,7 @@ function RatingScreen({ route, navigation, updateOutfits, outfits }) {
       lowTemp,
       highTemp,
       rating,
-      rated: true, // Ensure the outfit is marked as rated
+      rated: true, 
     };
 
     const updatedOutfits = outfits.map((o) =>

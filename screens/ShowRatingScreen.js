@@ -1,8 +1,34 @@
 import React from 'react';
-import { View, Text, StyleSheet, Image } from 'react-native';
+import { View, Text, StyleSheet, Image, Button, Alert } from 'react-native';
 
-function ShowRatingScreen({ route }) {
+function ShowRatingScreen({ route, navigation, updateOutfits, outfits }) {
   const { outfit } = route.params;
+
+  const handleDelete = () => {
+    Alert.alert(
+      'Delete Outfit',
+      'Are you sure you want to delete this outfit?',
+      [
+        { text: 'Cancel', style: 'cancel' },
+        {
+          text: 'Delete',
+          style: 'destructive',
+          onPress: () => {
+            // Filter out the outfit to be deleted
+            const updatedOutfits = outfits.filter((o) => o.id !== outfit.id);
+            // Update the outfits list
+            updateOutfits(updatedOutfits);
+            // Navigate back to the previous screen
+            navigation.goBack();
+          },
+        },
+      ]
+    );
+  };
+
+  const handleEdit = () => {
+    navigation.navigate('RatingScreen', { outfit });
+  };
 
   return (
     <View style={styles.container}>
@@ -18,6 +44,12 @@ function ShowRatingScreen({ route }) {
       </Text>
       <Text style={styles.label}>Rating:</Text>
       <Text style={styles.text}>{outfit.rating}/5</Text>
+
+      {/* Buttons for editing and deleting */}
+      <View style={styles.buttonContainer}>
+        <Button title="Edit Outfit" onPress={handleEdit} color="blue" />
+        <Button title="Delete Outfit" onPress={handleDelete} color="red" />
+      </View>
     </View>
   );
 }
@@ -31,7 +63,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
   },
   title: {
-    fontSize: 28, // Increased title size
+    fontSize: 28,
     fontWeight: 'bold',
     marginBottom: 20,
   },
@@ -41,11 +73,17 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   label: {
-    fontSize: 20, // Larger font for labels
+    fontSize: 20,
     fontWeight: 'bold',
   },
   text: {
-    fontSize: 18, // Increased font size for text
+    fontSize: 18,
+  },
+  buttonContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    width: '100%',
+    marginTop: 20,
   },
 });
 
